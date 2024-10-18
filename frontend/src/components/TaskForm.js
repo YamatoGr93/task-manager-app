@@ -1,65 +1,37 @@
-// src/components/TaskForm.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { addTask } from '../redux/actions/taskActions';  // Correct the path
 
-const TaskForm = ({ onTaskAdded }) => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [dueDate, setDueDate] = useState('');
-    const [status, setStatus] = useState('pending');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const newTask = { title, description, due_date: dueDate, status };
-        
-        try {
-            const response = await axios.post('http://localhost:8080/tasks', newTask);
-            onTaskAdded(response.data);
-            setTitle('');
-            setDescription('');
-            setDueDate('');
-            setStatus('pending');
-        } catch (error) {
-            console.error('Error adding task:', error);
-        }
-    };
+const TaskForm = () => {
+  const [task, setTask] = useState('');
+  const [priority, setPriority] = useState('medium');
+  const dispatch = useDispatch();
 
-    return (
-        <form onSubmit={handleSubmit} className="p-4 border rounded shadow-md">
-            <h2 className="text-lg font-bold mb-2">Add Task</h2>
-            <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Title"
-                required
-                className="mb-2 p-2 border rounded w-full"
-            />
-            <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
-                required
-                className="mb-2 p-2 border rounded w-full"
-            />
-            <input
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                required
-                className="mb-2 p-2 border rounded w-full"
-            />
-            <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="mb-2 p-2 border rounded w-full"
-            >
-                <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
-            </select>
-            <button type="submit" className="bg-blue-500 text-white rounded p-2">Add Task</button>
-        </form>
-    );
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addTask({ id: Date.now(), task, priority, completed: false }));
+    setTask('');
+    setPriority('medium');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Add a new task"
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+        required
+      />
+      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <button type="submit">Add Task</button>
+    </form>
+  );
 };
 
 export default TaskForm;
