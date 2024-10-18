@@ -23,7 +23,7 @@ A simple Task Manager application built with Go, Gin, React, and SQLite.
 
 1. Clone the repository
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/YamatoGr93/task-manager-app.git
    cd task-manager-app
 2. Set up the backend
    cd backend
